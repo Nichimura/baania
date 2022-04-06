@@ -45,8 +45,15 @@ export class PostCodeController {
         (SELECT PERCENTILE_CONT(0.5) WITHIN GROUP(ORDER BY price) FROM "Homes" as h  where h.post_code = '${id}') as median 
       FROM "Homes" as home 
       where home.post_code = '${id}'`;
-      const result = await _sequelize.query(sql, { type: QueryTypes.SELECT });
-      return result;
+      const result: any = await _sequelize.query(sql, {
+        type: QueryTypes.SELECT,
+      });
+      return {
+        payload: {
+          average: result[0]?.average,
+          median: result[0]?.median,
+        },
+      };
     } catch (error) {
       throw new HttpException(
         {

@@ -7,9 +7,9 @@ import {
   HttpStatus,
   Inject,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
-  Put,
   Query,
 } from '@nestjs/common';
 import { HomeDto } from './dto/home.dto';
@@ -39,7 +39,7 @@ export class HomeController {
   }
 
   @Patch('/:id')
-  async update(@Body() home: HomeDto, @Param('id') id: number) {
+  async update(@Body() home: HomeDto, @Param('id', ParseIntPipe) id: number) {
     try {
       await this.homesRepository.update(home, { where: { id: id } });
       return { success: true };
@@ -55,7 +55,7 @@ export class HomeController {
   }
 
   @Delete('/:id')
-  async delete(@Param('id') id: number) {
+  async delete(@Param('id', ParseIntPipe) id: number) {
     try {
       await this.homesRepository.destroy({ where: { id: id } });
       return { success: true };
